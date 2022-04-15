@@ -62,7 +62,7 @@ async def _reply(ctx, *args):
 @bot.command(name = 'запомни')
 async def _train(ctx, arg1, arg2):
     if (ctx.message.channel != bot.get_channel(settings['techChannel']) or
-        ctx.message.author.id != bot.get_user(settinds['idLords'])): # if no techCanel or no lords then ignore
+        ctx.message.author.id != bot.get_user(settings['idLords'])): # if no techCanel or no lords then ignore
         await ctx.send('**ОТКАЗАНО В ДОСТУПЕ** Простите, но данная комманда не доступна вам ):')
         return
     
@@ -83,7 +83,7 @@ async def _train(ctx, arg1, arg2):
 @bot.command(name = 'замени')
 async def _repace(ctx, arg1, arg2):
     if (ctx.message.channel != bot.get_channel(settings['techChannel']) or
-        ctx.message.author.id != bot.get_user(settinds['idLords'])): # if no techCanel or no lords then ignore
+        ctx.message.author.id != bot.get_user(settings['idLords'])): # if no techCanel or no lords then ignore
         await ctx.send('**ОТКАЗАНО В ДОСТУПЕ** Простите, но данная комманда не доступна вам ):')
         return
     
@@ -109,7 +109,7 @@ async def _repace(ctx, arg1, arg2):
 @bot.command(name = 'копия')
 async def _backup(ctx):
     if (ctx.message.channel != bot.get_channel(settings['techChannel']) or
-        ctx.message.author.id != bot.get_user(settinds['idLords'])): # if no techCanel or no lords then ignore
+        ctx.message.author.id != bot.get_user(settings['idLords'])): # if no techCanel or no lords then ignore
         await ctx.send('**ОТКАЗАНО В ДОСТУПЕ** Простите, но данная комманда не доступна вам ):')
         return
     
