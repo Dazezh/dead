@@ -61,78 +61,78 @@ async def _reply(ctx, *args):
 
 @bot.command(name = 'запомни')
 async def _train(ctx, arg1, arg2):
-    if (ctx.message.channel != bot.get_channel(settings['techChannel']) or
-        ctx.message.author.id != bot.get_user(settings['idLords'])): # if no techCanel or no lords then ignore
+    if (ctx.message.channel.id == settings['techChannel'] or
+        ctx.message.author.id == settings['idLords']): # if no techCanel or no lords then ignore
+        cmd = preparKey(arg1) # command
+        rpl = arg2 # reply
+        msgAuthor = ctx.message.author
+        
+        if answer.get(cmd) != None: # if the command is already there, then warn
+            await ctx.send(f'{msgAuthor.mention}, **в моём словаре уже найден ответ!...**\n *Значение будет перезаписанно...*')
+        
+        json.dump(answer, open('answerBACKUP.json','w'))
+        answer.update({cmd: rpl}) # update answer from {command: reply}
+        json.dump(answer, open('answer.json','w'))
+        await ctx.send(f'{msgAuthor.mention}, **Готово!\nСловарь успешно обновлён!**')
+        await ctx.message.add_reaction('✅')
+        return
+    else:
         await ctx.send('**ОТКАЗАНО В ДОСТУПЕ** Простите, но данная комманда не доступна вам ):')
         return
-    
-    cmd = preparKey(arg1) # command
-    rpl = arg2 # reply
-    msgAuthor = ctx.message.author
-    
-    if answer.get(cmd) != None: # if the command is already there, then warn
-        await ctx.send(f'{msgAuthor.mention}, **в моём словаре уже найден ответ!...**\n *Значение будет перезаписанно...*')
-    
-    json.dump(answer, open('answerBACKUP.json','w'))
-    answer.update({cmd: rpl}) # update answer from {command: reply}
-    json.dump(answer, open('answer.json','w'))
-    await ctx.send(f'{msgAuthor.mention}, **Готово!\nСловарь успешно обновлён!**')
-    await ctx.message.add_reaction('✅')
-    return
 
 @bot.command(name = 'замени')
 async def _repace(ctx, arg1, arg2):
-    if (ctx.message.channel != bot.get_channel(settings['techChannel']) or
-        ctx.message.author.id != bot.get_user(settings['idLords'])): # if no techCanel or no lords then ignore
+    if (ctx.message.channel.id == settings['techChannel'] or
+        ctx.message.author.id == settings['idLords']): # if no techCanel or no lords then ignore
+        cmd = arg1 # command
+        rpr = preparKey(arg2) # repair
+        msgAuthor = ctx.message.author
+        
+        if answer.get(cmd) == None:
+            await ctx.send(f'{msgAuthor.mention}, **ОШИБКА** В моём словаре не найденно введённого вами ключа. Проверьте правильность ввода')
+            return
+        elif cmd == rpr:
+            await ctx.send(f'{msgAuthor.mention}, **ОШИБКА** Ты ввёл одинаковые значения! Я так не играю')
+            return
+        
+        json.dump(answer, open('answerBACKUP.json','w'))
+        temp = answer.pop(cmd)
+        answer.update({rpr: temp})
+        json.dump(answer, open('answer.json','w'))
+        await ctx.send(f'{msgAuthor.mention}, **Готово!\nКлюч словаря успешно заменён**')
+        await ctx.message.add_reaction('✅')
+        return
+    else:
         await ctx.send('**ОТКАЗАНО В ДОСТУПЕ** Простите, но данная комманда не доступна вам ):')
         return
-    
-    cmd = arg1 # command
-    rpr = preparKey(arg2) # repair
-    msgAuthor = ctx.message.author
-    
-    if answer.get(cmd) == None:
-        await ctx.send(f'{msgAuthor.mention}, **ОШИБКА** В моём словаре не найденно введённого вами ключа. Проверьте правильность ввода')
-        return
-    elif cmd == rpr:
-        await ctx.send(f'{msgAuthor.mention}, **ОШИБКА** Ты ввёл одинаковые значения! Я так не играю')
-        return
-    
-    json.dump(answer, open('answerBACKUP.json','w'))
-    temp = answer.pop(cmd)
-    answer.update({rpr: temp})
-    json.dump(answer, open('answer.json','w'))
-    await ctx.send(f'{msgAuthor.mention}, **Готово!\nКлюч словаря успешно заменён**')
-    await ctx.message.add_reaction('✅')
-    return
 
 @bot.command(name = 'копия')
 async def _backup(ctx):
-    if (ctx.message.channel != bot.get_channel(settings['techChannel']) or
-        ctx.message.author.id != bot.get_user(settings['idLords'])): # if no techCanel or no lords then ignore
+    if (ctx.message.channel.id == settings['techChannel'] or
+        ctx.message.author.id == settings['idLords']): # if no techCanel or no lords then ignore
+        msgAuthor = ctx.message.author
+        
+        json.dump(answer, open('answerBACKUP.json','w'))
+        await ctx.message.add_reaction('✅')
+        await ctx.send(f'{msgAuthor.mention}, **Готово!**\nРезервная копия словаря созданна (предыдущая копия удалена)')
+        return
+    else:
         await ctx.send('**ОТКАЗАНО В ДОСТУПЕ** Простите, но данная комманда не доступна вам ):')
         return
-    
-    msgAuthor = ctx.message.author
-    
-    json.dump(answer, open('answerBACKUP.json','w'))
-    await ctx.message.add_reaction('✅')
-    await ctx.send(f'{msgAuthor.mention}, **Готово!**\nРезервная копия словаря созданна (предыдущая копия удалена)')
-    return
 
 @bot.command(name = 'восстановить')
 async def _repair(ctx):
-    if (ctx.message.channel != bot.get_channel(settings['techChannel']) or
-        ctx.message.author.id != bot.get_user(settinds['idLords'])): # if no techCanel or no lords then ignore
+    if (ctx.message.channel.id == settings['techChannel'] or
+        ctx.message.author.id == settings['idLords']): # if no techCanel or no lords then ignore
+        msgAuthor = ctx.message.author
+        answer = json.load(open('answerBACKUP.json','r'))
+        json.dump(answer, open('answer.json','w'))
+        await ctx.message.add_reaction('✅')
+        await ctx.send(f'{msgAuthor.mention}, **Готово!**\nРезервная копия словаря восстановлена')
+        return
+    else:
         await ctx.send('**ОТКАЗАНО В ДОСТУПЕ** Простите, но данная комманда не доступна вам ):')
         return
-    
-    msgAuthor = ctx.message.author
-    answer = json.load(open('answerBACKUP.json','r'))
-    json.dump(answer, open('answer.json','w'))
-    await ctx.message.add_reaction('✅')
-    await ctx.send(f'{msgAuthor.mention}, **Готово!**\nРезервная копия словаря восстановлена')
-    return
 
 @bot.command(name = 'реши')
 async def _example(ctx, arg):
