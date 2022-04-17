@@ -1,7 +1,7 @@
 ﻿settings = {
     'token': '<токен вашего бота>',
     'prefix': '<префикс команд (не забудте изменить хелп)>',
-    'botVersion': 'Tacmot 1.0',
+    'botVersion': 'Tacmot 1.1',
     'idLords': айди администратора,
     'techChannel': канал обучения бота,
     'defalutVoice': '<голос по умолчанию (для команды ттс)>',
