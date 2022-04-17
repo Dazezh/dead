@@ -1,5 +1,4 @@
-import pyttsx3
-import json
+import pyttsx3, json
 
 from time import time
 
@@ -15,7 +14,7 @@ trans = {
     'ч': 'ch', 'ш': 'sh', 'щ': 'shh',
     'ъ': '', 'ы': 'y', 'ь': '',
     'э': 'je', 'ю': 'ju', 'я': 'ja',
-    ' ': '_'
+    ' ': ''
     } # rus to eng translit
 
 signs = [
@@ -57,21 +56,18 @@ def preparKey(arg):
 
 def saveReminder(*args):
     if len(args) < 2: return None
-    
     temp = list(args[1])
     msgAuthor = args[0]
     when = temp.pop(0)
     when2 = temp.pop(0)
     when2 = when2.lower()
     msgUser = str(' '.join(map(''.join,temp)))
-    
     if when.isdigit == False: # if the user entered not a number, then exit
         return None
     else:
         when = float(when)
     if when2.isalpha == False: # if the user entered not a word, then exit
         return None
-    
     if (when2 == 'м' or when2 == 'минут' or
     when2 == 'минута' or when2 == 'минуты'):
         when = when * 60
@@ -80,14 +76,12 @@ def saveReminder(*args):
     elif when2 == 'д' or when2 == 'дня' or when2 == 'день':
         when = when * 24 * 60 * 60
     else: return None
-    
-    if when > 172800: # if the limit (2 day) is exceeded - stop
+    if when > 2764801: # if the limit (32 day) is exceeded - stop
         return None
     else:
         when = time() + when
-    
     temp = str(msgAuthor) + '%' + msgUser
-    remind = json.load(open('remind.json', 'r'))
+    remind = json.load(open('json\\remind.json', 'r'))
     remind.update({when: temp})
-    json.dump(remind, open('remind.json', 'w'))
+    json.dump(remind, open('json\\remind.json', 'w'))
     return True
